@@ -13,8 +13,15 @@ class XmlWriter
   end
 
   private def method_missing(tag_name, *args, &block)
-    # TODO: implement method_missing, you can either assume that a block was given,
-    #       or that args contains a single string argument
+    if block_given? then
+      @xml << "#{indent}<#{tag_name}>\n"
+      @indentation_level += 1
+      instance_eval &block
+      @indentation_level -= 1
+      @xml << "#{indent}</#{tag_name}>\n"
+    else
+      @xml << "#{indent}<#{tag_name}>#{args.first}</#{tag_name}>\n"
+    end
   end
 end
 
